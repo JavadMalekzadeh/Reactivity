@@ -15,11 +15,7 @@ namespace API.Controllers
     public class WeatherForecastController : ControllerBase
     {
         private readonly DataContext _context;
-        public WeatherForecastController(DataContext context)
-        {
-            this._context = context;
 
-        }
         private static readonly string[] Summaries = new[]
         {
             "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
@@ -27,15 +23,16 @@ namespace API.Controllers
 
         private readonly ILogger<WeatherForecastController> _logger;
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger)
+        public WeatherForecastController(ILogger<WeatherForecastController> logger, DataContext context)
         {
             _logger = logger;
+            this._context = context;
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Value>>> Get()
         {
-            var Values=await _context.Values.ToListAsync();
+            var Values = await _context.Values.ToListAsync();
             return Ok(Values);
             // var rng = new Random();
             // return Enumerable.Range(1, 5).Select(index => new WeatherForecast
@@ -49,7 +46,7 @@ namespace API.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Value>> GetByid(int id)
         {
-            var val=await _context.Values.FindAsync(id);
+            var val = await _context.Values.FindAsync(id);
             return Ok(val);
         }
     }
