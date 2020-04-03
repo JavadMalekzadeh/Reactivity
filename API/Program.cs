@@ -16,16 +16,20 @@ namespace API
     {
         public static void Main(string[] args)
         {
-            var host= CreateHostBuilder(args).Build();
-            using(var scope=host.Services.CreateScope()){
-                var Services=scope.ServiceProvider;
-                try{
-                    var context=Services.GetRequiredService<DataContext>();
+            var host = CreateHostBuilder(args).Build();
+            using (var scope = host.Services.CreateScope())
+            {
+                var Services = scope.ServiceProvider;
+                try
+                {
+                    var context = Services.GetRequiredService<DataContext>();
                     context.Database.Migrate();
+                    Seed.SeedData(context);
                 }
-                catch(Exception ex){
-                    var logger=Services.GetRequiredService<ILogger<Program>>();
-                    logger.LogError(ex,"An Error Occured During Migration");
+                catch (Exception ex)
+                {
+                    var logger = Services.GetRequiredService<ILogger<Program>>();
+                    logger.LogError(ex, "An Error Occured During Migration");
                 }
             }
             host.Run();
@@ -37,7 +41,7 @@ namespace API
                 {
                     webBuilder.UseStartup<Startup>();
                 });
-    
-    
+
+
     }
 }
